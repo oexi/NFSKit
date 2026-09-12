@@ -188,6 +188,12 @@ extension NFSContext {
             nfs_truncate_async(context, path, toLength, NFSContext.generic_handler, cbPtr)
         }
     }
+
+    func chmod(_ path: String, mode: UInt32) throws {
+        try async_await { (context, cbPtr) -> Int32 in
+            nfs_chmod_async(context, path, Int32(bitPattern: mode), NFSContext.generic_handler, cbPtr)
+        }
+    }
 }
 
 

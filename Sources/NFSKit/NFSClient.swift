@@ -271,6 +271,20 @@ public class NFSClient: NSObject {
             }
         }
     }
+
+    /// Returns POSIX permission bits (for example 0o644 or 0o755) for an item.
+    open func permissionsOfItem(atPath path: String, completionHandler: @escaping (Result<UInt32, Error>) -> Void) {
+        with(completionHandler: completionHandler) { context in
+            UInt32(truncatingIfNeeded: try context.stat(path).nfs_mode) & 0o7777
+        }
+    }
+
+    /// Updates POSIX permission bits for an item.
+    open func setPermissions(_ mode: UInt32, ofItemAtPath path: String, completionHandler: CompletionHandler) {
+        with(completionHandler: completionHandler) { context in
+            try context.chmod(path, mode: mode & 0o7777)
+        }
+    }
     
     /**
     Returns the path of the item pointed to by a symbolic link.
